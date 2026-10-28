@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+/* ============================================================
+   COUNTRY BOYS GRILL — DESIGN SYSTEM
+   Palette (from client flyer):
+   navy #0B2A4A · brick red #C8102E · cream #FFF4DC · gold #F5A623 · charcoal #1E1E1E
+   Type: Alfa Slab One (display) + Poppins (body)
+   ============================================================ */
+
+@theme {
+  --font-display: "Alfa Slab One", "Rockwell", "Bookman Old Style", serif;
+  --font-body: "Poppins", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+
+  --color-navy-950: #071e38;
+  --color-navy-900: #0b2a4a;
+  --color-navy-800: #123a63;
+  --color-navy-700: #1b4a7c;
+  --color-navy-100: #cfe0f0;
+
+  --color-brick-400: #e4526b;
+  --color-brick-600: #c8102e;
+  --color-brick-700: #a80d26;
+  --color-brick-800: #8a0a1f;
+
+  --color-cream-50: #fffbef;
+  --color-cream-100: #fff4dc;
+  --color-cream-200: #f7e8c8;
+  --color-cream-300: #edd9a8;
+
+  --color-gold-300: #ffc95e;
+  --color-gold-400: #f5a623;
+  --color-gold-500: #dd8a0f;
+  --color-gold-600: #b96f08;
+
+  --color-char-900: #1e1e1e;
+  --color-char-600: #4a4a4a;
+  --color-char-500: #5c5c5c;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+  }
+  @media (min-width: 768px) {
+    html {
+      scroll-padding-top: 6.75rem;
+    }
+  }
+  body {
+    @apply bg-cream-100 font-body text-char-900 antialiased overflow-x-clip;
+  }
+  ::selection {
+    background: var(--color-gold-400);
+    color: var(--color-char-900);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-gold-400);
+    outline-offset: 2px;
+  }
+  img {
+    @apply select-none;
+  }
+}
+
+/* ---------- Textures ---------- */
+/* Subtle film grain — overlay any section with .grain.
+   z-1: sits above static section content (text/images) but below
+   any positioned UI (z-indexed modals, lightbox, drawers). */
+.grain {
+  position: relative;
+  isolation: isolate;
+}
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Dark “smoky wood plank” section background */
+.wood {
+  background-color: var(--color-navy-900);
+  background-image: repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 0px,
+      rgba(255, 255, 255, 0.025) 2px,
+      transparent 2px,
+      transparent 110px
+    ),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.14) 0px, transparent 1px, transparent 28px),
+    linear-gradient(180deg, #0e3154 0%, var(--color-navy-900) 55%, #082340 100%);
+}
+
+/* ---------- Ribbon section heading ---------- */
+.ribbon {
+  display: inline-block;
+  padding: 0.55rem 3rem 0.65rem;
+  background: var(--color-brick-600);
+  color: var(--color-cream-100);
+  clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 14px 100%, 0 50%);
+  filter: drop-shadow(0 4px 6px rgba(7, 30, 56, 0.25));
+}
+
+/* ---------- Marquee (trust banner) ---------- */
+.marquee {
+  overflow: hidden;
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- Hero Ken Burns breathing ---------- */
+.kenburns {
+  animation: kenburns 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes kenburns {
+  from {
+    transform: scale(1) translate(0, 0);
+  }
+  to {
+    transform: scale(1.1) translate(1.5%, -1.5%);
+  }
+}
+
+/* ---------- Scroll reveal (driven by IntersectionObserver) ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Small flourishes ---------- */
+@keyframes stamp-in {
+  0% {
+    opacity: 0;
+    transform: rotate(-14deg) scale(1.6);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-8deg) scale(1);
+  }
+}
+.stamp-in {
+  animation: stamp-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.35s;
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+.drift {
+  animation: drift 2.2s ease-in-out infinite;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Menu tab underline slide */
+.tab-active {
+  background: var(--color-brick-600);
+  color: var(--color-cream-50);
+  box-shadow: 0 6px 14px -6px rgba(200, 16, 46, 0.65);
+}
+
+/* ---------- Reduced motion: respect user preference ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .kenburns,
+  .marquee-track,
+  .drift,
+  .stamp-in {
+    animation: none !important;
+  }
+  .stamp-in {
+    opacity: 1;
+    transform: rotate(-8deg);
+  }
+  .marquee-track {
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+    gap: 0 2rem;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
